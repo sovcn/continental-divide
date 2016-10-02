@@ -126,7 +126,7 @@ namespace ContinentalDivide
 
                 for (var i = 0; i < numRows; i++)
                 {
-                    for (var j = 0; j < NUM_COLUMNS * 2; j += 2) // Double 16-bit rows to address each 8bit input, step by 16bits at a time
+                    for (var j = 0; j < NUM_COLUMNS * 2; j += 2) // Double # of 16-bit rows to address each 8bit input, step by 16bits at a time
                     {
                         var firstByte = i * rowByteSize + j;
 
@@ -207,15 +207,16 @@ namespace ContinentalDivide
                 }
             }
 
-            var arrayHandle = System.Runtime.InteropServices.GCHandle.Alloc(imageMap, System.Runtime.InteropServices.GCHandleType.Pinned);
-            var bmp = new Bitmap(width, height, // 2x2 pixels
-                width*bpp,                     // RGB32 => 8 bytes stride
-                System.Drawing.Imaging.PixelFormat.Format32bppArgb,
+            var arrayHandle = GCHandle.Alloc(imageMap, GCHandleType.Pinned);
+            var bmp = new Bitmap(width, height,
+                width*bpp, // bytes per row
+                PixelFormat.Format32bppArgb,
                 arrayHandle.AddrOfPinnedObject()
             );
 
             bmp.Save(@"data/test.bmp");
 
+            arrayHandle.Free(); // Free the pinned memory handle so GC can clear things up.  Prevents a memory leak.
         }
 
 
