@@ -148,7 +148,7 @@ namespace ContinentalDivide
         }
 
 
-        static void drawElevationMapImage(string folder, Location[,] elevationMap)
+        static void DrawElevationMapImage(string folder, Location[,] elevationMap)
         {
             var width = elevationMap.GetLength(1); // Num columns = width
             var height = elevationMap.GetLength(0); // Num rows = height
@@ -228,6 +228,8 @@ namespace ContinentalDivide
 
             Location loc;
 
+            // TODO : This needs to instead do a breadth-first search from two starting seeds to determine drainage basins for two bodies of water
+
             for (var j = 0; j < height; j++) // For each row, scan from outside in and push first coast tile on stack
             {
                 for(var i = 0; i<width; i++)
@@ -252,36 +254,6 @@ namespace ContinentalDivide
                     }
                 }
             }
-            /*for( var j=0; j < height; j++) // For each row, scan from outside in and push first coast tile on stack
-            {
-                // Scan from west
-                var westPtr = 0;
-                while (westPtr < width - 1 && elevationMap[j, westPtr].elevation < 0 )
-                {
-                    westPtr++;
-                }
-
-                loc = elevationMap[j, westPtr];
-                if(loc.elevation >= 0)
-                {
-                    loc.isCoast = true;
-                    stack.push(loc);
-                }
-
-                // Scan from east
-                var eastPtr = width - 1;
-                while (eastPtr > 0 && elevationMap[j, eastPtr].elevation < 0)
-                {
-                    eastPtr--;
-                }
-
-                loc = elevationMap[j, eastPtr];
-                if (loc.elevation >= 0)
-                {
-                    loc.isCoast = true;
-                    stack.push(loc);
-                }
-            }*/
         }
 
         static void Main(string[] args)
@@ -297,7 +269,10 @@ namespace ContinentalDivide
             // 2. For each item on the stack, push all upwards neighbors on stack and repeat
                 // Mark each item as accessible from a particular ocean (how...)
 
-            drawElevationMapImage(@"data/", elevationMap);
+            // TODO
+
+            // 3. Output image of resulting calculations
+            DrawElevationMapImage(@"data/", elevationMap);
 
             var numNotOcean = 0;
             foreach(var loc in elevationMap)
